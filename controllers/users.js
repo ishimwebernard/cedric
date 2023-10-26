@@ -16,7 +16,7 @@ module.exports = {
                 Email: req.body.Email,
             }
         }).then((users) => {
-            if (!users) return res.status(400).send({message: "User not found"})
+            if (users.length == 0) return res.status(400).send({message: "User not found"})
 
             if ( users[0].Password == req.body.Password)
             return res.status(200).send({message: "Login Succesful"})
