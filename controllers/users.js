@@ -19,7 +19,7 @@ module.exports = {
             if (users.length == 0) return res.status(400).send({message: "User not found"})
 
             if ( users[0].Password == req.body.Password)
-            return res.status(200).send({message: "Login Succesful"})
+            return res.status(200).send({message: "Login Succesful", role:users[0].Role})
             return res.status(400).send({message: "Enter the correct password"})
         }).catch((error) => res.status(400).send(error))
     }

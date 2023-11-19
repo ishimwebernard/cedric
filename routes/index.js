@@ -57,6 +57,17 @@ router.post('/api/submitfeedback',upload.single('uploaded_file'), function (req,
       .catch((error)=>res.status(400).send(error))
   }
 });
+router.post('/api/getFeedback',(req,res)=>{
+  FeedbackModel.findAll({
+    where: {
+        CustomerEmail: req.body.Email,
+    }
+}).then((feedbacks)=>{
+  res.status(200).send(feedbacks)
+}).catch((error)=>{
+  res.status(400).send({message: "Something went wrong"})
+})
+})
 
 
 module.exports = router;
