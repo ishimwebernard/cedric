@@ -1,8 +1,21 @@
 var express = require('express');
 var router = express.Router();
 const Validator = require('../validators/validate')
-const multer = require("multer")
-const upload = multer({ dest: './public/data/uploads/' })
+//const upload = multer({ dest: './public/data/uploads/' })
+
+var multer = require('multer');
+var path = require('path')
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
+  }
+})
+var upload = multer({ storage: storage });
+
+
 const DesignTrack = require('../validate-schema').DesignTrack
 const FeedbackSchema = require('../validate-schema').FeedbackSchema
 
@@ -22,6 +35,7 @@ router.post('/api/login', Validator.validateLogin, UsersController.login)
 
 router.post('/api/submitdesign',upload.single('uploaded_file'), function (req, res, next) {
   console.log(req.body)
+  console.log('Files', req.file)
   if (!req.file){
     return res.status(400).send({message: "Send at least one file"})
   }
@@ -66,6 +80,16 @@ router.post('/api/getFeedback',(req,res)=>{
   res.status(200).send(feedbacks)
 }).catch((error)=>{
   res.status(400).send({message: "Something went wrong"})
+})
+})
+
+router.post('/api/viewSubmittedContent', (req, res)=>{
+  DesignTrackModel.findAll({
+    where: {
+        OrganizationName: req.body.Email,
+    }
+}).then((designs)=>{
+  res.status(200).send(designs)
 })
 })
 
