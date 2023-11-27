@@ -93,5 +93,26 @@ router.post('/api/viewSubmittedContent', (req, res)=>{
 })
 })
 
+router.get('/api/viewAllContent', (req, res)=>{
+  DesignTrackModel.findAll().then((designs)=>{
+  res.status(200).send(designs)
+})
+})
+router.post('/api/updateDesign/:id', Validator.validateUpdate,(req, res)=>{
+  return DesignTrackModel.findByPk(req.params.id).then(design=>{
+    if (!design) {
+      return res.status(404).send({
+        message: 'Design Not Found',
+      });
+    }
+    return design.update({Status: req.body.Status}).then((s)=>{
+      console.log(req.body)
+      return res.status(200).send({message: 'Success'})
+    }).catch((error)=>{
+      console.log(error)
+      return res.status(400).send({message: 'Something went wrong!'})
+    })
+  })
+})
 
 module.exports = router;

@@ -3,6 +3,7 @@ const Users = require('../validate-schema').Users
 const DesignTrack = require('../validate-schema').DesignTrack
 const LoginSchema = require('../validate-schema').Login
 const UserdbModel = require('../models').Users
+const UpdateModel = require('../validate-schema').Update
 module.exports =  {
     async validateFeedback (req, res, next) {
         const {error} = await FeedbackSchema.validate(req.body)
@@ -40,6 +41,17 @@ module.exports =  {
             return res.status(400).send(error)
         }else{
             next()
+        }
+
+    },
+    async validateUpdate(req, res, next) {
+        const {error} = await UpdateModel.validate(req.body)
+        if (error){
+            return res.status(400).send(error)
+        }else{
+            if([0,1,2,3].includes(req.body.Status))
+            return next()
+            else return res.status(400).send({message: 'Status should be 0,1,2,3'})
         }
 
     }
