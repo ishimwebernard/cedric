@@ -11,7 +11,8 @@ var storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
-  }
+  },
+  limits: 0
 })
 var upload = multer({ storage: storage });
 
@@ -55,23 +56,17 @@ router.post('/api/submitdesign',upload.single('uploaded_file'), function (req, r
   }
 });
 
-router.post('/api/submitfeedback',upload.single('uploaded_file'), function (req, res, next) {
+router.post('/api/submitfeedback',upload.array('uploaded_file',1) || next(), function (req, res, next) {
   console.log(req.body)
-  if (!req.file){
-    return res.status(400).send({message: "Send at least one file"})
-  }
   RequestObject = req.body
-  console.log(req.file)
+  if(req.file)
   RequestObject.CustomerFiles = req.file.filename
+else RequestObject.CustomerFiles = ''
   next()
 }, async function (req, res) {
-  const {error} = await FeedbackSchema.validate(RequestObject)
-  if (error){
-      return res.status(400).send(error)
-  }else {
      return FeedbackModel.create(RequestObject).then(()=> res.status(201).send({message: "Feedback Succesfully submitted"}))
       .catch((error)=>res.status(400).send(error))
-  }
+  
 });
 router.post('/api/getFeedbackCustomer',(req,res)=>{
   FeedbackModel.findAll({
