@@ -22,5 +22,17 @@ module.exports = {
             return res.status(200).send({message: "Login Succesful", credentials:users[0]})
             return res.status(400).send({message: "Enter the correct password"})
         }).catch((error) => res.status(400).send(error))
+    },
+    giveAllCustomers(req, res){
+        Users.findAll({
+            attributes: {exclude: ['Password']},
+            where: {
+                Role: 0,
+            }
+        }).then((users) => {
+            if (users.length == 0) return res.status(400).send({message: "User not found"})
+
+            return res.status(200).send({ credentials:users})
+        }).catch((error) => res.status(400).send(error))
     }
 }

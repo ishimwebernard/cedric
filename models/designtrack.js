@@ -14,8 +14,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   DesignTrack.init({
-    Type: DataTypes.STRING, //To become a Markdown description
-    OrganizationName: DataTypes.STRING, //To become the email of designer
+    Description: DataTypes.STRING, //To become a Markdown description
+    DesignerEmail: DataTypes.STRING, //To become the email of designer
+    CustomerEmail: DataTypes.STRING,
     Status: DataTypes.INTEGER, //approved, under review, rejected
     Files: DataTypes.STRING
   }, {

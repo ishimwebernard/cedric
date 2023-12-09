@@ -32,6 +32,8 @@ router.get('/', function(req, res, next) {
 
 router.post('/api/signup', Validator.validateUsers, UsersController.signUp)
 router.post('/api/login', Validator.validateLogin, UsersController.login)
+router.get('/api/getAllCustomers', UsersController.giveAllCustomers)
+
 
 router.post('/api/submitdesign',upload.single('uploaded_file'), function (req, res, next) {
   console.log(req.body)
@@ -86,7 +88,18 @@ router.post('/api/getFeedback',(req,res)=>{
 router.post('/api/viewSubmittedContent', (req, res)=>{
   DesignTrackModel.findAll({
     where: {
-        OrganizationName: req.body.Email,
+      DesignerEmail: req.body.DesignerEmail,
+    }
+}).then((designs)=>{
+  res.status(200).send(designs)
+})
+})
+
+
+router.post('/api/viewCustomerAddressedDesign', (req, res)=>{
+  DesignTrackModel.findAll({
+    where: {
+      CustomerEmail: req.body.CustomerEmail,
     }
 }).then((designs)=>{
   res.status(200).send(designs)
