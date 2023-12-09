@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   Feedback.init({
     DesignId:  DataTypes.INTEGER,
     CustomerEmail: DataTypes.STRING,
+    DesignerEmail: DataTypes.STRING,
     CustomerFiles: DataTypes.STRING,
     CustomerText: DataTypes.STRING
   }, {

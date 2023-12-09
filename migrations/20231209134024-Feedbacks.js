@@ -15,6 +15,9 @@ module.exports = {
       CustomerEmail: {
         type: Sequelize.STRING
       },
+      DesignerEmail: {
+        type: Sequelize.STRING
+      },
       CustomerFiles: {
         type: Sequelize.STRING
       },

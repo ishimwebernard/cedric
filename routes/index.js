@@ -73,10 +73,21 @@ router.post('/api/submitfeedback',upload.single('uploaded_file'), function (req,
       .catch((error)=>res.status(400).send(error))
   }
 });
-router.post('/api/getFeedback',(req,res)=>{
+router.post('/api/getFeedbackCustomer',(req,res)=>{
   FeedbackModel.findAll({
     where: {
-        CustomerEmail: req.body.Email,
+        CustomerEmail: req.body.CustomerEmail,
+    }
+}).then((feedbacks)=>{
+  res.status(200).send(feedbacks)
+}).catch((error)=>{
+  res.status(400).send({message: "Something went wrong"})
+})
+})
+router.post('/api/getFeedbackDesigner',(req,res)=>{
+  FeedbackModel.findAll({
+    where: {
+        DesignerEmail: req.body.DesignerEmail,
     }
 }).then((feedbacks)=>{
   res.status(200).send(feedbacks)
@@ -94,6 +105,28 @@ router.post('/api/viewSubmittedContent', (req, res)=>{
   res.status(200).send(designs)
 })
 })
+router.post('/api/viewDesignerRejectedDesingns', (req, res)=>{
+  DesignTrackModel.findAll({
+    where: {
+      DesignerEmail: req.body.DesignerEmail,
+      Status: 3
+    }
+}).then((designs)=>{
+  res.status(200).send(designs)
+})
+})
+
+
+router.post('/api/viewDesignerApprovedDesingns', (req, res)=>{
+  DesignTrackModel.findAll({
+    where: {
+      DesignerEmail: req.body.DesignerEmail,
+      Status: 2
+    }
+}).then((designs)=>{
+  res.status(200).send(designs)
+})
+})
 
 
 router.post('/api/viewCustomerAddressedDesign', (req, res)=>{
@@ -105,6 +138,7 @@ router.post('/api/viewCustomerAddressedDesign', (req, res)=>{
   res.status(200).send(designs)
 })
 })
+
 
 router.get('/api/viewAllContent', (req, res)=>{
   DesignTrackModel.findAll().then((designs)=>{
